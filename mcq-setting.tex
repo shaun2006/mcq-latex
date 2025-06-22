@@ -1,0 +1,95 @@
+\newbox\allanswers
+\setbox\allanswers=\vbox{}
+
+\newenvironment{answer}
+{%
+    \global\setbox\allanswers=\vbox\bgroup
+    \unvbox\allanswers
+}%
+{%
+    \bigbreak
+    \egroup
+}
+
+\newcommand{\showallanswers}{\par\unvbox\allanswers}
+% End answer
+
+\newcommand*{\getanswer}[5]{%
+    \ifthenelse{\equal{#5}{a}}
+    {\begin{answer}\thequestion. (a)~#1\end{answer}}
+    {\ifthenelse{\equal{#5}{b}}
+        {\begin{answer}\thequestion. (b)~#2\end{answer}}
+        {\ifthenelse{\equal{#5}{c}}
+            {\begin{answer}\thequestion. (c)~#3\end{answer}}
+            {\ifthenelse{\equal{#5}{d}}
+                {\begin{answer}\thequestion. (d)~#4\end{answer}}
+                {\begin{answer}\textbf{\thequestion. (#5)~Invalid answer choice.}\end{answer}}}}}
+}
+
+\setlength\parindent{0pt}
+%usage \choice{ }{ }{ }{ }
+%(A)(B)(C)(D)
+\newcommand{\fourch}[5]{
+    \par
+    \begin{tabular}{*{4}{@{}p{0.23\textwidth}}}
+        (a)~#1 & (b)~#2 & (c)~#3 & (d)~#4
+    \end{tabular}
+    \getanswer{#1}{#2}{#3}{#4}{#5}
+}
+
+%(A)(B)
+%(C)(D)
+\newcommand{\twoch}[5]{
+    \par
+    \begin{tabular}{*{2}{@{}p{0.46\textwidth}}}
+        (a)~#1 & (b)~#2
+    \end{tabular}
+    \par
+    \begin{tabular}{*{2}{@{}p{0.46\textwidth}}}
+        (c)~#3 & (d)~#4
+    \end{tabular}
+    \getanswer{#1}{#2}{#3}{#4}{#5}
+}
+
+%(A)
+%(B)
+%(C)
+%(D)
+\newcommand{\onech}[5]{
+    \par
+    (a)~#1 \par (b)~#2 \par (c)~#3 \par (d)~#4
+    \getanswer{#1}{#2}{#3}{#4}{#5}
+}
+
+
+\newlength\widthcha
+\newlength\widthchb
+\newlength\widthchc
+\newlength\widthchd
+\newlength\widthch
+\newlength\tabmaxwidth
+
+\setlength\tabmaxwidth{0.96\textwidth}
+\newlength\fourthtabwidth
+\setlength\fourthtabwidth{0.25\textwidth}
+\newlength\halftabwidth
+\setlength\halftabwidth{0.5\textwidth}
+
+\newcommand{\choice}[5]{%
+\settowidth\widthcha{AM.#1}\setlength{\widthch}{\widthcha}%
+\settowidth\widthchb{BM.#2}%
+\ifdim\widthch<\widthchb\relax\setlength{\widthch}{\widthchb}\fi%
+    \settowidth\widthchb{CM.#3}%
+\ifdim\widthch<\widthchb\relax\setlength{\widthch}{\widthchb}\fi%
+    \settowidth\widthchb{DM.#4}%
+\ifdim\widthch<\widthchb\relax\setlength{\widthch}{\widthchb}\fi%
+
+% Allows for the \onech option.
+\ifdim\widthch>\halftabwidth
+    \onech{#1}{#2}{#3}{#4}{#5}
+\else\ifdim\widthch<\halftabwidth
+\ifdim\widthch>\fourthtabwidth
+    \twoch{#1}{#2}{#3}{#4}{#5}
+\else
+    \fourch{#1}{#2}{#3}{#4}{#5}
+\fi\fi\fi}
