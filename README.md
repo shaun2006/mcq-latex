@@ -213,6 +213,6 @@ pdflatex main.tex
 │ ├── image1.png
 │ └── image2.png
 │ └── icons/
-│   └── image1.png
+│   └── icon.png
 ```
 
